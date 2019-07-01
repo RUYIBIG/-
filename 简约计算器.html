@@ -1,0 +1,289 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>计算器，简约-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+* {
+	padding:0;
+	margin:0;
+}
+ul {
+	list-style:none
+}
+#layout {
+	width:380px;
+	height:670px;
+	margin:0 auto;
+	margin-top:30px;
+	overflow:hidden;
+	box-shadow:5px 5px 5px #ccc;
+	border-top:1px solid #ccc;
+	border-left:1px solid #ccc;
+}
+#result {
+	display:block;
+	width:100%;
+	height:80px;
+	margin-top:44px;
+	line-height:80px;
+	text-align:right;
+	padding-right:20px;
+	font-size:46px;
+	box-sizing:border-box;
+}
+#inp {
+	display:block;
+	width:100%;
+	height:74px;
+	font-size:22px;
+	text-align:right;
+	box-sizing:border-box;
+	padding-right:20px;
+	line-height:74px;
+}
+.view {
+	width:100%;
+	height:198px;
+	overflow:hidden;
+	background:linear-gradient(45deg,#dd4993,#f6b233);
+}
+ul {
+	width:100%;
+	height:472px;
+}
+li {
+	width:25%;
+	height:20%;
+	background-color:#ffffff;
+	float:left;
+	line-height:94px;
+	text-align:center;
+	font-size:24px;
+	color:#515151;
+	box-sizing:border-box;
+}
+li:active {
+	border-bottom:4px solid #ccc;
+}
+li:nth-of-type(17) {
+	width:50%;
+}
+li:nth-of-type(-n+4) {
+	background-color:#eaeaea;
+}
+li:nth-of-type(8),li:nth-of-type(12),li:nth-of-type(16),li:nth-of-type(18) {
+	background-color:#eaeaea;
+}
+li:nth-of-type(19) {
+	background:linear-gradient(45deg,#dd4993,#f6b233);
+}
+li:nth-of-type(1) {
+	color:#E86875;
+}
+</style>
+</head>
+<body>
+<div id="con" style="display:none"></div>
+<div id="layout">
+    <div class="view">
+        <span id="result"></span>
+        <span id="inp"></span>
+    </div>
+    <ul id="uls">
+        <li class="ac">AC</li>
+        <li class="ab">CE</li>
+        <li class="per">%</li>
+        <li class="divisor">÷</li>
+
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li class="times">×</li>
+
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li class="minus">-</li>
+
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li class="sum">+</li>
+
+        <li>0</li>
+        <li class="dian">.</li>
+        <li class="equal">=</li>
+    </ul>
+</div>
+
+<script>
+$(function() {
+    var lis = $('#uls').children();
+    // 遍历li 批量注册事件 （功能键除外） 
+    $.each(lis, function(i, e) {
+        $(e).click(function() {
+            if ($(e).prop('className') == 'equal' ||
+                $(e).prop('className') == 'minus' ||
+                $(e).prop('className') == 'sum' ||
+                $(e).prop('className') == 'times' ||
+                $(e).prop('className') == 'divisor' ||
+                $(e).prop('className') == 'ab' ||
+                $(e).prop('className') == 'ac' ||
+                $(e).prop('className') == 'dian' ||
+                $(e).prop('className') == 'per') {
+                return false;
+            }
+            var data = $(this).html();
+            var datas = $('#inp').html()
+            datas += data;
+            if ($(e).prop('className') == 'divisor') {
+                var cons = $('#con').html();
+                cons += "/";
+                $('#con').html(cons)
+                $('#inp').html(datas)
+                flag = true;
+            } else if ($(e).prop('className') == 'times') {
+                var cons = $('#con').html();
+                cons += "*";
+                $('#con').html(cons)
+                $('#inp').html(datas)
+                flag = true;
+            } else {
+                var cons = $('#con').html();
+                cons += data;
+                $('#con').html(cons)
+                $('#inp').html(datas)
+            }
+        })
+    })
+    var arr = [];
+    // AC 按键
+    $('.ac').click(function() {
+        $('#inp').html('')
+        $('#result').html('')
+        $('#con').html('')
+        flag = true;
+    })
+    //MC
+    $('.ab').click(function() {
+        $('#result').html(arr[0])
+        flag = true;
+    })
+    // 等号
+    $('.equal').click(function() {
+        var ss = eval($('#con').html())
+        $('#result').html(ss)
+        arr = [];
+        arr.push($('#result').html())
+        console.log(arr[0])
+    })
+    // 减号
+    var arr = [];
+    $('.minus').click(function() {
+        if (eval($('#con').html()) == "" || eval($('#con').html()) == undefined) {
+            return false;
+        } else {
+            var ss = eval($('#con').html())
+            console.log(ss)
+            $('#result').html(ss)
+            var datas = $('#inp').html()
+            datas += "-";
+            var cons = $('#con').html();
+            cons += "-";
+            $('#con').html(ss + '-')
+            $('#inp').html(datas)
+            arr = [];
+            arr.push($('#result').html())
+            flag = true;
+        }
+
+    })
+
+    // 加号
+    $('.sum').click(function() {
+        if (eval($('#con').html()) == "" || eval($('#con').html()) == undefined) {
+            return false;
+        } else {
+            var ss = eval($('#con').html())
+            console.log(ss)
+            $('#result').html(ss)
+            var datas = $('#inp').html()
+            datas += "+";
+            var cons = $('#con').html();
+            cons += "+";
+            $('#con').html(ss + '+')
+            $('#inp').html(datas)
+            arr = [];
+            arr.push($('#result').html())
+            flag = true;
+        }
+
+    })
+
+    // 乘号
+    $('.times').click(function() {
+        if (eval($('#con').html()) == "" || eval($('#con').html()) == undefined) {
+            return false;
+        } else {
+            var ss = eval($('#con').html())
+            console.log(ss)
+            $('#result').html(ss)
+            var datas = $('#inp').html()
+            datas += "×";
+            $('#con').html(ss + '*')
+            $('#inp').html(datas)
+            arr = [];
+            arr.push($('#result').html())
+            flag = true;
+        }
+
+    })
+    // 除号
+    $('.divisor').click(function() {
+        if (eval($('#con').html()) == "" || eval($('#con').html()) == undefined) {
+            return false;
+        } else {
+            var ss = eval($('#con').html())
+            console.log(ss)
+            $('#result').html(ss)
+            var datas = $('#inp').html()
+            datas += "÷";
+            $('#con').html(ss + '/')
+            $('#inp').html(datas)
+            arr = [];
+            arr.push($('#result').html())
+            flag = true;
+        }
+        var ss = eval($('#con').html())
+        console.log(ss)
+        $('#result').html(ss)
+        var datas = $('#inp').html()
+        datas += "÷";
+        $('#con').html(ss + '/')
+        $('#inp').html(datas)
+        arr = [];
+        arr.push($('#result').html())
+        flag = true;
+    })
+
+    // 点
+    var flag = true;
+    $('.dian').click(function() {
+        if (flag) {
+            var datas = $('#inp').html()
+            datas += ".";
+            var cons = $('#con').html();
+            cons += ".";
+            $('#con').html(cons)
+            $('#inp').html(datas)
+        }
+        flag = false;
+    })
+
+})
+</script>
+
+</body>
+</html>
