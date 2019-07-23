@@ -1,0 +1,60 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>仿锤子网3d效果图-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+body {
+	/* 控制3d效果 */
+         perspective:1000px;
+	overflow:hidden;
+}
+.box {
+	width:400px;
+	height:240px;
+	margin:0 auto;
+	/* background-color:greenyellow;
+	*/
+        box-shadow:0px 0px 20px gray;
+	/* 开启3d */
+        transform-style:preserve-3d;
+	/* 添加过渡 */
+        transition:all 0.2s
+}
+</style>
+</head>
+<body>
+<div class="box">
+    <img src="http://www.jq22.com/img/cs/500x300-1.png" alt="" width="400">
+</div>
+
+<script>
+//给盒子加移动事件
+var box=document.querySelector(".box")
+box.onmousemove=function(event){
+    //获得鼠标在盒子内移动的坐标
+    var x=event.offsetX
+    var y=event.offsetY
+    //获得盒子的宽高 ,将宽高分成左右各一部分
+    var w = this.offsetWidth/2;
+    var h = this.offsetHeight/2;
+    //确定盒子的3d 旋转效果 ,将3d效果分为中心线沿y轴正方向和反方向旋转
+    //这里做一个判断,如果鼠标移动点在盒子的左半部分,则逆时针旋转,反之,顺时针旋转
+    //旋转的程度等于鼠标移动坐标与盒子坐标一半的百分比乘以角度3  
+    var degX=x<=w?(w-x)/(w)*-3:(w-(w-x))/w*3
+    //沿x轴旋转同理
+    var degY=y<=h?(h-y)/(h)*-3:(h-(h-y))/h*3
+    //将x轴 y轴旋转合并
+    this.style.transform="rotateY("+degX+"deg) rotateX("+degY+"deg)"
+    
+}
+//给盒子添加移出事件 ,恢复默认状态
+box.onmouseleave=function(){
+    this.style.transform="rotateY("+0+"deg) rotateX("+0+"deg)"
+}
+
+</script>
+
+</body>
+</html>
