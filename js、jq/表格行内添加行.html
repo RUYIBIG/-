@@ -1,0 +1,141 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>表格行内添加行-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+/*表格*/
+.typical-table {
+	text-align:center;
+	background:#fff;
+	border-top:1px solid #f1f1f1;
+}
+.typical-table table {
+	width:100%;
+	background:#fff;
+	border-collapse:collapse;
+	border:1px solid #ddd;
+}
+.typical-table tr {
+	border-bottom:1px solid #f1f1f1;
+}
+.typical-table td {
+	height:40px;
+	font-size:12px;
+	padding:0px 20px;
+	text-align:center;
+	color:#666;
+}
+.typical-table thead td {
+	color:#666;
+	font-weight:bold;
+	background:#f6fbff;
+}
+/*表格控件*/
+.typical-table td .td-btn {
+	padding:6px 16px;
+	margin-right:5px;
+	background:#00a8e6;
+	color:#fff;
+	border:1px solid #00a8e6;
+	border-radius:4px;
+	font-size:12px;
+	cursor:pointer;
+}
+.typical-table .td-input {
+	width:100%;
+	height:26px;
+	border-radius:4px;
+	border:1px solid #ddd;
+	font-size:12px;
+	text-align:center;
+}
+.per-20 {
+	width:20%;
+}
+.red {
+	border:1px solid #fe3f3f !important;
+}
+</style>
+</head>
+<body>
+<div class=" typical-table">
+    <table>
+        <thead>
+            <tr>
+                <td>姓名</td>
+                <td>证件号码</td>
+                <td>缴存基数</td>
+                <td>单位比例</td>
+                <td>个人比例</td>
+                <td>月汇缴额</td>
+                <td class="per-20">操作</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="add-tr">
+                <td><input type="text" class="td-input"></td>
+                <td><input type="text" class="td-input"></td>
+                <td><input type="text" class="td-input"></td>
+                <td><input type="text" class="td-input"></td>
+                <td><input type="text" class="td-input"></td>
+                <td><input type="text" class="td-input"></td>
+                <td><button class="td-btn" id="td-save">保存</button><button class="td-btn" id="td-empt">清空</button></td>
+            </tr>
+            <tr>
+                <td>张三</td>
+                <td>56454213223132222</td>
+                <td>￥4000</td>
+                <td>12.00</td>
+                <td>12.00</td>
+                <td>￥960.00</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+$(function() {
+    var tInput = $("#add-tr").find(".td-input");
+    //验证必须每个项都填写
+    var vali = function() {
+        opt = true;
+        tInput.each(function() {
+            if ($(this).val() == "") {
+                opt = false;
+                $(this).addClass("red")
+            } else {
+                $(this).removeClass("red")
+            }
+        })
+        if (opt == false) {
+            alert("您有未填写项")
+            return false;
+        } else {
+            return true;
+        }
+    }
+    //点击保存
+    $("#td-save").click(function() {
+        if (vali() == true) {
+            $("#add-tr").after('<tr></tr>');
+            var nxt = $("#add-tr").next();
+            tInput.each(function() {
+                nxt.append('<td>' + $(this).val() + '</td>')
+            })
+            nxt.append('<td></td>')
+        }
+    })
+    //点击清空
+    $("#td-empt").click(function() {
+        tInput.each(function() {
+            $(this).val("");
+        })
+    })
+})
+</script>
+
+</body>
+</html>

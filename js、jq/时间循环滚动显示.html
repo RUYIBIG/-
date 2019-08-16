@@ -1,0 +1,40 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>网页滚动时间-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<style>
+marquee {
+	background-color:#F6EEC7;
+	width:500px;
+	height:50px;
+}
+</style>
+</head>
+<body>
+<marquee behavior="scroll" direction="left">
+    <p id="time"></p>
+</marquee>
+
+<script>
+function time() {
+    function format(i) {
+        return (i < 10 ? "0" + i : i);
+    }
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = format(date.getMonth() + 1);
+    var day = format(date.getDate());
+    var arr = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    var week = arr[date.getDay()];
+    var hour = format(date.getHours());
+    var minute = format(date.getMinutes());
+    var second = format(date.getSeconds());
+    document.getElementById("time").innerHTML = "你好，现在时间是：" + year + "年" + month + "月" + day + "日" + " " + week + hour + "点" + minute + "分" + second + "秒"
+}
+var interval = setInterval(time, 100);
+</script>
+
+</body>
+</html>

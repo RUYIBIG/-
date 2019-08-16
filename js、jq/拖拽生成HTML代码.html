@@ -1,0 +1,335 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>拖拽生成HTML-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+body {
+	-moz-user-select:none;
+	/*火狐*/
+    -webkit-user-select:none;
+	/*webkit浏览器*/
+    -ms-user-select:none;
+	/*IE10*/
+    -khtml-user-select:none;
+	/*早期浏览器*/
+    user-select:none;
+}
+</style>
+</head>
+<body>
+<div id="allDiv" style="width:500px;height:400px;border:1px solid #000;">
+    <div id="back" style="width:500px;height:400;">
+        <img src="">
+        <label id="tag0" ondblclick="changeName(this)" onmousedown="mouseDown(this)" style="width:auto; height:auto; position:absolute;margin-left: 10px;font-size:10px;float:left;" onmouseover="supShow(this)" onmouseout="supHide(this)">标签(双击修改)
+     <sup style="color:red;display:none;width:40px;float: right;" onclick="delect(this)"> ×</sup></label>
+    </div>
+
+</div>
+<div id="tools" style="border:1px solid #000;width:500px;">
+    <button onclick="addBold()" title="粗体" style="margin-left: 20px;">B</button>
+    <button onclick="addItalic()" title="斜体">/</button>
+    <button onclick="addUnderline()" title="下划线">_</button>
+    <a style="font-size:10px;">字体:</a>
+    <select id="fontSelect" onchange="changeFont()" style="width:55px;">
+		<option selected="true">initial</option>
+		<option>cursive</option>
+		<option>fantasy</option>
+		<option>monospace</option>
+		<option>Georgia</option>
+		<option>serif</option>
+	</select>
+
+    <a style="font-size:10px;">字号:</a>
+    <select id="fontSizeSelect" onchange="changeFontSize()" style="width:55px;">
+		<option>6px</option>
+		<option>8px</option>
+		<option selected="true">10px</option>
+		<option>12px</option>
+		<option>14px</option>
+		<option>18px</option>
+		<option>24px</option>
+		<option>36px</option>
+	</select>
+    <a style="font-size:10px;">字体颜色:</a>
+    <select id="fontColorSelect" onchange="changeColor()" style="width:55px;">
+	</select>
+    <button onclick="addTag()" style="font-size:10px;">添加元素</button>
+</div>
+<div id="" style="border:1px solid #DCDCDC;width:500px;">
+
+    <!-- <button onclick="getHTML()">获取HTML</button> -->
+</div>
+
+<!-- 显示HTML源码 -->
+<textarea id="innerHTML" type="text" style="background:#F8F8FF;width:500px;height:200px;" disabled="true"></textarea>
+
+<script>
+// <!-- 文本不被选中 -->
+document.onselectstart = document.ondrag = function() {
+    return false;
+}
+//tag num
+var num = 1;
+
+var colorArray = [{
+        "color": "#993300",
+        "name": "Burnt orange"
+    },
+    {
+        "color": "#333300",
+        "name": "Dark olive"
+    },
+    {
+        "color": "#003300",
+        "name": "Dark green"
+    },
+    {
+        "color": "#003366",
+        "name": "Dark azure"
+    },
+    {
+        "color": "#000080",
+        "name": "Navy Blue"
+    },
+    {
+        "color": "#333399",
+        "name": "Indigo"
+    },
+    {
+        "color": "#333333",
+        "name": "Dark gray"
+    },
+    {
+        "color": "#800000",
+        "name": "Maroon"
+    },
+    {
+        "color": "#FF6600",
+        "name": "Orange"
+    },
+    {
+        "color": "#808000",
+        "name": "Olive"
+    },
+    {
+        "color": "#008000",
+        "name": "Green"
+    },
+    {
+        "color": "#008080",
+        "name": "Teal"
+    },
+    {
+        "color": "#0000FF",
+        "name": "Blue"
+    },
+    {
+        "color": "#666699",
+        "name": "Grayish blue"
+    },
+    {
+        "color": "#808080",
+        "name": "Gray"
+    },
+    {
+        "color": "#FF0000",
+        "name": "Red"
+    },
+    {
+        "color": "#FF9900",
+        "name": "Amber"
+    },
+    {
+        "color": "#99CC00",
+        "name": "Yellow green"
+    },
+    {
+        "color": "#33CCCC",
+        "name": "Turquoise"
+    },
+    {
+        "color": "#3366FF",
+        "name": "Royal blue"
+    },
+    {
+        "color": "#800080",
+        "name": "Purple"
+    },
+    {
+        "color": "#999999",
+        "name": "Medium gray"
+    },
+    {
+        "color": "#FF99CC",
+        "name": "Pink"
+    },
+    {
+        "color": "#FFCC99",
+        "name": "Peach"
+    },
+    {
+        "color": "#FFFF99",
+        "name": "Light yellow"
+    },
+    {
+        "color": "#CCFFCC",
+        "name": "Pale Green"
+    },
+    {
+        "color": "#CCFFFF",
+        "name": "Pale cyan"
+    },
+    {
+        "color": "#99CCFF",
+        "name": "Light sky blue"
+    },
+    {
+        "color": "#CC99FF",
+        "name": "Plum"
+    },
+    {
+        "color": "#FFFFFF",
+        "name": "White"
+    },
+    {
+        "color": "#000000",
+        "name": "Black"
+    }
+];
+//渲染页面中的颜色选择列表
+var colorSel = "";
+for (var i = 0; i < colorArray.length; i++) {
+    colorSel += '<option selected="true" style="background-color:' + colorArray[i].color + ';" title="' + colorArray[i].name + '">' + colorArray[i].name + '</option>';
+}
+var pp = document.getElementById("fontColorSelect").innerHTML = colorSel;
+
+
+function mouseDown(ev) {
+    var oDiv = document.getElementById(ev.id);
+    oDiv.onmousedown = function(ev) {
+        var oEvent = ev || event;
+        var disX = oEvent.clientX - oDiv.offsetLeft;
+        var disY = oEvent.clientY - oDiv.offsetTop;
+        if (oDiv.setCapture) {
+            oDiv.onmousemove = mouseMove;
+            oDiv.onmouseup = mouseUp;
+            oDiv.setCapture();
+        } else {
+            document.getElementById("back").onmousemove = mouseMove;
+            document.getElementById("back").onmouseup = mouseUp;
+            return false; //解决firefox第二次拖拽时发生的bug;
+        }
+
+        function mouseMove(ev) {
+            var oEvent = ev || event;
+            var l = oEvent.clientX - disX;
+            var t = oEvent.clientY - disY;
+            if (l < 0) {
+                l = 0;
+            } else if (l > document.getElementById("back").clientWidth - oDiv.offsetWidth) {
+                l = document.getElementById("back").clientWidth - oDiv.offsetWidth;
+            }
+            if (t < 0) {
+                t = 0
+            } else if (t > document.getElementById("back").clientHeight - oDiv.offsetHeight) {
+                t = document.getElementById("back").clientHeight - oDiv.offsetHeight;
+            }
+            oDiv.style.left = l + 'px';
+            oDiv.style.top = t + 'px';
+        }
+
+        function mouseUp(ev) {
+
+            this.onmousemove = null;
+            this.onmouseup = null;
+            if (oDiv.releaseCapture) {
+                oDiv.releaseCapture();
+            }
+            getHTML();
+        }
+    }
+}
+//取到HTML
+function getHTML() {
+    var newHTML = document.getElementById("allDiv").innerHTML;
+    //alert(document.getElementById("allDiv").innerHTML);
+    document.getElementById("innerHTML").value = newHTML;
+}
+//更改标签内容
+function changeName(newL) {
+    var comment = prompt("请输入标签内容", "");
+    if (comment != null && comment != "") {
+        newL.innerHTML = comment + '<sup style="color:red;display:none;width:40px;float: right;" onclick="delect(this)"> ×</sup>';
+    }
+}
+//添加新标签
+function addTag() {
+    var newLabel = '<label id="tag' + num + '" style="width:auto; height:auto; position:absolute;margin-left: 10px;font-size:10px;"  ondblclick="changeName(this)" onmousedown="mouseDown(this)" onmouseover="supShow(this)" onmouseout="supHide(this)">标签(双击修改) <sup style="color:red;display:none;width:40px;float: right;" onclick="delect(this)"> ×</sup></label>';
+    document.getElementById("back").innerHTML += newLabel;
+    num++;
+    fontSize = 10;
+}
+//删除当前标签
+function delect(ev) {
+    document.getElementById(ev.parentNode.parentNode.id).removeChild(document.getElementById(ev.parentNode.id));
+
+}
+//显示删除按钮
+function supShow(ev) {
+    ev.firstElementChild.style.display = "block";
+}
+//隐藏删除按钮
+function supHide(ev) {
+    ev.firstElementChild.style.display = "none";
+}
+//字号
+function changeFontSize() {
+    var currentSize = document.getElementById("fontSizeSelect").value;
+    var number = num - 1;
+    document.getElementById("tag" + number).style.fontSize = currentSize;
+}
+//字体
+function changeFont() {
+    var currentFont = document.getElementById("fontSelect").value;
+    var number = num - 1;
+    document.getElementById("tag" + number).style.fontFamily = currentFont;
+}
+//字体颜色
+function changeColor() {
+    var currentColor = document.getElementById("fontColorSelect").selectedOptions[0].style.backgroundColor;
+    var number = num - 1;
+    document.getElementById("tag" + number).style.color = currentColor;
+}
+
+function addItalic() {
+    var number = num - 1;
+    if (document.getElementById("tag" + number).style.fontStyle) {
+        document.getElementById("tag" + number).style.fontStyle = "";
+    } else {
+        document.getElementById("tag" + number).style.fontStyle = "italic";
+    }
+}
+
+function addBold() {
+    var number = num - 1;
+    if (document.getElementById("tag" + number).style.fontWeight) {
+        document.getElementById("tag" + number).style.fontWeight = "";
+    } else {
+        document.getElementById("tag" + number).style.fontWeight = "bold";
+    }
+}
+
+function addUnderline() {
+    var number = num - 1;
+    if (document.getElementById("tag" + number).style.textDecoration) {
+        document.getElementById("tag" + number).style.textDecoration = "";
+    } else {
+        document.getElementById("tag" + number).style.textDecoration = "underline";
+    }
+}
+</script>
+
+</body>
+</html>

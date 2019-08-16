@@ -1,0 +1,32 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>点击空白处关闭弹窗-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<style>
+.box {
+	margin:50px auto;
+	width:100px;
+	height:100px;
+	background-color:pink;
+}
+</style>
+</head>
+<body>
+<div class="box"></div>
+
+<script>
+click("box","box");
+function click(name,box) {
+    $(document).on("click", function(e) {
+        var _conss = $('.'+name);//点击的容器范围
+        if (!_conss.is(e.target) && _conss.has(e.target).length === 0) {
+            $("."+box).hide();//选择要关闭的容器
+        }
+    });
+}
+</script>
+
+</body>
+</html>

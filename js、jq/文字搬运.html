@@ -1,0 +1,209 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>文字搬运效果-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+body,div,iframe,ul,ol,dl,dt,dd,li,dl,h1,h2,h3,h4,table,th,td,input,button,select,textarea {
+	margin:0;
+	padding:0;
+	font-style:normal;
+	font:12px/22px Arial,Helvetica,sans-serif;
+}
+ol,ul,li {
+	list-style:none;
+}
+img {
+	border:0;
+	vertical-align:middle;
+}
+body {
+	color:#000000;
+	background:#FFF;
+}
+a {
+	color:#000000;
+	text-decoration:none;
+}
+a:hover {
+	color:#F00;
+}
+#box {
+	width:830px;
+	height:300px;
+	margin:50px auto 0px;
+}
+#box .left,#box .right,#box .in {
+	border:1px solid #ccc;
+}
+#box .left,#box .right {
+	width:278px;
+	height:278px;
+	margin:10px;
+	padding:10px;
+	color:#ff8080;
+	float:left;
+	font-size:16px;
+}
+#box .in {
+	float:left;
+	width:160px;
+	height:298px;
+	margin:10px;
+	border:1px solid #ccc;
+}
+#box .in .btn {
+	display:block;
+	width:130px;
+	height:40px;
+	border:none;
+	outline:none;
+	margin:20px auto 0;
+	background:#ff8080;
+	color:#fff;
+}
+#box .in .btn:hover {
+	background:#ff0000;
+	cursor:pointer;
+}
+#box .in .progress {
+	display:none;
+	width:100%;
+	margin:50px 0 0;
+	text-align:center;
+}
+#box .in .progress progress {
+	display:block;
+	width:120px;
+	height:20px;
+	margin:5px auto 0
+}
+#box .in .progress span {
+	font-size:16px;
+}
+#box .in .progress_quotes {
+	display:none;
+	width:85px;
+	margin:20px auto 0;
+}
+#box .in .progress_quotes span {
+	display:inline-block;
+	width:12px;
+	height:32px;
+	border:1px solid #ccc;
+}
+#box .in .progress_quotes span.on {
+	background:#ff8080;
+}
+#box .in .counts {
+	display:none;
+	width:50px;
+	height:20px;
+	margin:0 auto;
+	text-align:center;
+	line-height:20px;
+	font-size:16px;
+}
+</style>
+</head>
+<body>
+<div id="box">
+    <div class="left"></div>
+    <div class="in">
+        <button class="btn">搬运</button>
+        <div class="progress">
+            <progress value="0" max="100"></progress>
+            <span></span>
+        </div>
+        <div class="progress_quotes">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="counts"></div>
+    </div>
+    <div class="right"></div>
+</div>
+
+<script>
+~ function() {
+    var oBox = document.getElementById("box"),
+        oLeft = oBox.children[0],
+        oIn = oBox.children[1],
+        oRight = oBox.children[2],
+        oBtn = oIn.children[0],
+        oprog = oIn.children[1],
+        opq = oIn.children[2],
+        oProg1 = oIn.children[1].children[0],
+        oPer = oIn.children[1].children[1], //百分比span
+        aSpan = oIn.children[2].children, //5个span
+        oCounts = oIn.children[3], //总进度div
+        words = '点花蕊，散清香。入，甚为清香。伤心花不败，不落，我静待。清铃合欢，随风摇曳，不止休，心依。' +
+        '戴珠簪，于发间。你嫣然一笑，我心醉。丝发于指尖，宛若一丝香，香残余。花开花落不休，溪水长流不止。这一生，有你，已足够。';
+    oLeft.innerHTML = words,
+        length = words.length,
+        flag = false;
+    addEvent(oBtn, "click", fn);
+
+    function fn() {
+        if (!flag) {
+            this.style.background = "#808080";
+            this.innerHTML = "搬运中..."
+            oprog.style.display = "block";
+            opq.style.display = "block";
+            oCounts.style.display = "block";
+        }
+        var i = 0,
+            t = null;
+
+        function decWords() {
+            i++;
+            oLeft.innerHTML = words.slice(i);
+            oRight.innerHTML = words.slice(0, i);
+            oCounts.innerHTML = i + "/" + length;
+            oProg1.value = (i / length * 100);
+            oPer.innerHTML = ((i / length) * 100).toFixed(0) + "%";
+            t = setTimeout(decWords, 100);
+            if (i === length) {
+                clearTimeout(t);
+                flag = true;
+            };
+        }
+        setTimeout(decWords, 200);
+
+        function pqamination() {
+            var index = 0,
+                t1 = null,
+                j = 0;
+
+            function amination() {
+                aSpan[index].className = "";
+                aSpan[j].className = "on";
+                index = j;
+                j = j === aSpan.length - 1 ? 0 : j + 1;
+                t1 = setTimeout(amination, 1000);
+                if (flag === true) {
+                    oprog.style.display = "none";
+                    opq.style.display = "none";
+                    oCounts.style.display = "none";
+                    oBtn.innerHTML = "搬运完成~";
+                    oBtn.style.background = "#ff8080";
+                    clearTimeout(t1);
+                }
+            }
+            amination();
+        }
+        pqamination();
+    }
+
+    function addEvent(obj, type, eFn) {
+        obj.addEventListener ? obj.addEventListener(type, eFn, false) : obj.attachEvent("on" + type, eFn);
+    };
+}();
+</script>
+
+</body>
+</html>

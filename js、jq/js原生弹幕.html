@@ -1,0 +1,61 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>js原生弹幕-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+* {
+	padding:0;
+	margin:0;
+}
+.all {
+	width:600px;
+	height:400px;
+	background:#000000;
+}
+.danmu {
+	width:600px;
+	height:500px;
+	background:#000000;
+	overflow:hidden;
+	z-index:50;
+}
+</style>
+</head>
+<body>
+<div class="all">
+
+</div>
+<input type="text" class="texts" value="这是一个弹幕。。。">
+<button>发送</button>
+
+<script>
+ var all = document.querySelector('.all');
+ var danmu = document.querySelector('.danmu');
+ var buttons = document.querySelector('button');
+ var texts = document.querySelector('.texts');
+ console.log(texts.value);
+ buttons.onclick = function() {
+     var p = document.createElement('p');
+     p.style.position = 'absolute';
+     p.innerHTML = texts.value;
+     p.style.left = 600 + 'px';
+     p.style.color = 'white';
+     p.style.zIndex = 100;
+     p.style.top = Math.random() * 490 + 'px';
+     all.appendChild(p);
+     var x = setInterval(function() {
+         p.style.left = parseInt(p.style.left) - 10 + 'px';
+         if ((parseInt(p.style.left) + 600) <= 0) {
+             all.removeChild(p);
+             clearInterval(x);
+         }
+
+     }, 100)
+
+ }
+</script>
+
+</body>
+</html>
